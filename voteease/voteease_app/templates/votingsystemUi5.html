@@ -1,0 +1,726 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VoteEase</title>
+    <link rel="stylesheet" href="{% static 'css/votingsystemUistyle2.css' %}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            height: 500vh; 
+        }
+        :root {
+            --primary-color: #4b7574;
+            --secondary-color: #3a5a59;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+        }
+
+        .form-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--background-color);
+            border-radius: 6px;
+        }
+
+        .form-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .dynamic-form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .add-more-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .add-more-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .candidate-info {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .dynamic-form-group {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .form-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        .icon {
+            font-size: 1.2em;
+            color: #fff;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        /* Check overlay styles */
+        .check-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 10px;
+            z-index: 10;
+        }
+        
+        .check-icon {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .view-details-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #4b7574;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 11;
+        }
+        
+        .view-details-btn:hover {
+            background: #3a5a59;
+        }
+        
+        .candidate-image-container {
+            position: relative;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 100;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+        .login-popup, .register-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+        .popup-content input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .popup-content button {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #4b7574;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .close-btn2 {
+            border: 20vh;
+            border-radius: 1vh;
+            border-color: #000;
+            background-color: #4b7574;
+            text-align: center;
+            position: absolute;
+            width: 6vh;
+            color: #fff;
+            float: right;
+            margin-left: 22vh;
+            margin-top: -2vh;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+    
+        }
+        .table {
+            width: 100%;
+            border: 1px solid #EEEEEE;
+            border-radius: 5px;
+            overflow: hidden; /* This ensures borders are rounded for the whole table */
+        }
+
+        .table-header {
+            display: flex;
+            width: 100%;
+            background: #000;
+            padding: 12px 0;
+            color: white;
+        }
+
+        .table-row {
+            display: flex;
+            width: 100%;
+            padding: 12px 0;
+        }
+
+        .table-row:nth-of-type(odd) {
+            background: #EEEEEE;
+        }
+
+        .table-data, .header__item {
+            flex: 1 1 20%;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .header__item {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .filter__link {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding-left: 24px;
+            padding-right: 30px;
+        }
+
+        .filter__link::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .filter__link.desc::after {
+            content: '(desc)';
+        }
+
+        .filter__link.asc::after {
+            content: '(asc)';
+        }
+
+        .table-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .add-position-btn {
+            background-color: #4b7574;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+        }
+
+        .add-position-btn:hover {
+            background-color: #3a5a59;
+            transform: translateY(-2px);
+        }
+
+        .button-container {
+            margin-bottom: 20px;
+            text-align: right; 
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">VoteEase</h2>
+        <button class="dropdown-button" id="home_btn" style="margin-left: auto;">Home</button>
+        <button class="dropdown-button" id="candidate_btn" >Candidates</button>
+        <button class="dropdown-button" id="position_btn">Positions</button>
+        <nav class="navbar navbar-light bg-light">
+            <div class="dropdown">
+                <button class="dropdown-button" id="userDropdown">
+                    <i class="fas fa-user icon" style="margin-right: 5px;"></i>{{ user.username }} <i class="fas fa-caret-down icon"></i>
+                </button>
+                <div class="dropdown-content" id="userDropdownContent">
+                    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="form-container">
+        <h2>Create Candidate</h2>
+        
+        <form method="POST" enctype="multipart/form-data" id="candidateForm" action="{% url 'create_candidate' %}">
+            {% csrf_token %}
+            
+            <div class="candidate-info">
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ submitted_data.first_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ submitted_data.last_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Position:</label>
+                    <select name="position" id="position">
+                        <option value="">Select Position</option>
+                        {% for position in all_position %}
+                        <option value="{{ position.id }}" {% if submitted_data.position == position.id|stringformat:"s" %}selected{% endif %}>
+                            {{ position.position_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="strand">Strand:</label>
+                    <select name="strand" id="strand">
+                        <option value="STEM">STEM</option>
+                        <option value="HUMSS">HUMSS</option>
+                        <option value="TVL">TVL</option>
+                        <option value="ABM">ABM</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sex">Sex:</label>
+                    <select name="sex" id="sex">
+                        <option value="Male">MALE</option>
+                        <option value="Female">FEMALE</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ps_image">Candidate Image</label>
+                    <input type="file" id="ps_image" name="ps_image" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Education</h3>
+                <div id="education-form-container">
+                    <div class="dynamic-form-group">
+                        <div class="form-group">
+                            <label for="institution_name_1">Institution Name</label>
+                            <input type="text" id="institution_name_1" name="education[0][institution_name]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="start_year_1">Start Year</label>
+                            <input type="text" id="start_year_1" name="education[0][start_year]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end_year_1">End Year</label>
+                            <input type="text" id="end_year_1" name="education[0][end_year]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description_1">Description</label>
+                            <textarea id="description_1" name="education[0][description]" required></textarea>
+                        </div>
+                        <button type="button" class="remove-btn" onclick="removeEducationGroup('1')">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="add-more-btn" onclick="addEducationGroup()">Add More Education</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Leadership Experience</h3>
+                <div id="leadership-form-container">
+                    <div class="dynamic-form-group">
+                        <div class="form-group">
+                            <label for="position_1">Position</label>
+                            <input type="text" id="position_1" name="leadership[0][position]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="organization_1">Organization</label>
+                            <input type="text" id="organization_1" name="leadership[0][organization]" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start_year_leadership_1">Start Year</label>
+                            <input type="text" id="start_year_leadership_1" name="leadership[0][start_year]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end_year_leadership_1">End Year</label>
+                            <input type="text" id="end_year_leadership_1" name="leadership[0][end_year]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="leadership_description_1">Description</label>
+                            <textarea id="leadership_description_1" name="leadership[0][description]" required></textarea>
+                        </div>
+                    <button type="button" class="remove-btn" onclick="removeLeadershipGroup('1')">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="add-more-btn" onclick="addLeadershipGroup()">Add More Leadership Experience</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Awards</h3>
+                <div id="award-form-container">
+                    <div class="dynamic-form-group">
+                        <div class="form-group">
+                            <label for="award_name_1">Award Name</label>
+                            <input type="text" id="award_name_1" name="award[0][award_name]" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="year_1">Organization</label>
+                            <input type="text" id="year_1" name="award[0][year]" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="award_description_1">Start Year</label>
+                            <input type="text" id="award_description_1" name="award[0][description]" required>
+                        </div>
+                        <button type="button" class="remove-btn" onclick="removeAwardGroup('1')">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="add-more-btn" onclick="addAwardGroup()">Add More Awards</button>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="add-more-btn">Submit</button>
+                <button type="button" id="close_add_candidate_button" class="remove-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let educationCount = 1;
+        let leadershipCount = 1;
+        let awardCount = 1;
+
+        // Function to add new Education form
+        function addEducationGroup() {
+            educationCount++;
+            const educationFormContainer = document.getElementById('education-form-container');
+
+            const educationGroup = document.createElement('div');
+            educationGroup.classList.add('education-group');
+            educationGroup.classList.add('dynamic-form-group');
+            educationGroup.id = `education-group-${educationCount}`;
+            
+            educationGroup.innerHTML = `
+                <div class="form-group">
+                    <label for="institution_name_${educationCount}">Institution Name</label>
+                    <input type="text" id="institution_name_${educationCount}" 
+                        name="education[${educationCount - 1}][institution_name]" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="start_year_${educationCount}">Start Year</label>
+                    <input type="text" id="start_year_${educationCount}" 
+                        name="education[${educationCount - 1}][start_year]" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="end_year_${educationCount}">End Year</label>
+                    <input type="text" id="end_year_${educationCount}" 
+                        name="education[${educationCount - 1}][end_year]" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description_${educationCount}">Description</label>
+                    <textarea id="description_${educationCount}" 
+                            name="education[${educationCount - 1}][description]" required></textarea>
+                </div>
+
+                <button type="button" class="remove-btn" onclick="removeEducationGroup('${educationCount}')">Remove</button>
+            `;
+            
+            educationFormContainer.appendChild(educationGroup);
+        }
+
+        // Function to remove Education form
+        function removeEducationGroup(groupId) {
+            const educationGroup = document.getElementById(`education-group-${groupId}`);
+            educationGroup.remove();
+        }
+
+        function addLeadershipGroup() {
+            leadershipCount++;
+            const leadershipFormContainer = document.getElementById('leadership-form-container');
+            const leadershipGroup = document.createElement('div');
+            leadershipGroup.classList.add('group-container');
+            leadershipGroup.id = `leadership-group-${leadershipCount}`;
+            leadershipGroup.classList.add('dynamic-form-group');
+            leadershipGroup.innerHTML = `
+                <div class="form-group">
+                    <label for="position_${leadershipCount}">Position</label>
+                    <input type="text" id="position_${leadershipCount}" 
+                        name="leadership[${leadershipCount - 1}][position]" required>
+                </div>
+                <div class="form-group">
+                    <label for="organization_${leadershipCount}">Organization</label>
+                    <input type="text" id="organization_${leadershipCount}" 
+                        name="leadership[${leadershipCount - 1}][organization]" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_year_leadership_${leadershipCount}">Start Year</label>
+                    <input type="text" id="start_year_leadership_${leadershipCount}" 
+                        name="leadership[${leadershipCount - 1}][start_year]" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_year_leadership_${leadershipCount}">End Year</label>
+                    <input type="text" id="end_year_leadership_${leadershipCount}" 
+                        name="leadership[${leadershipCount - 1}][end_year]" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="leadership_description_${leadershipCount}">Description</label>
+                    <textarea id="leadership_description_${leadershipCount}" 
+                            name="leadership[${leadershipCount - 1}][description]" required></textarea>
+                </div>
+
+                <button type="button" class="remove-btn" onclick="removeLeadershipGroup('${leadershipCount}')">Remove</button>
+            `;
+            leadershipFormContainer.appendChild(leadershipGroup);
+        }
+
+        // Remove Leadership Group
+        function removeLeadershipGroup(groupId) {
+            const leadershipGroup = document.getElementById(`leadership-group-${groupId}`);
+            leadershipGroup.remove();
+        }
+
+        // Add Award Group
+        function addAwardGroup() {
+            awardCount++;
+            const awardFormContainer = document.getElementById('award-form-container');
+
+            const awardGroup = document.createElement('div');
+            awardGroup.classList.add('group-container');
+            awardGroup.id = `award-group-${awardCount}`;
+            awardGroup.classList.add('dynamic-form-group');
+            awardGroup.innerHTML = `
+                
+                <div class="form-group">
+                    <label for="award_name_${awardCount}">Award Name</label>
+                    <input type="text" id="award_name_${awardCount}" 
+                        name="award[${awardCount - 1}][award_name]" required>
+                </div>
+                <div class="form-group">
+                    <label for="year_${awardCount}">Year</label>
+                    <input type="text" id="year_${awardCount}" 
+                        name="award[${awardCount - 1}][year]" required>
+                </div>
+                <div class="form-group">
+                    <label for="award_description_${awardCount}">Description</label>
+                    <input type="text" id="award_description_${awardCount}" 
+                        name="award[${awardCount - 1}][description]" required>
+                </div>
+
+                <button type="button" class="remove-btn" onclick="removeAwardGroup('${awardCount}')">Remove</button>
+            `;
+            awardFormContainer.appendChild(awardGroup);
+        }
+
+        // Remove Award Group
+        function removeAwardGroup(groupId) {
+            const awardGroup = document.getElementById(`award-group-${groupId}`);
+            awardGroup.remove();
+        }
+    </script>
+
+    <script>
+
+        document.getElementById('home_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'votingsystemUi2' %}";
+        });
+
+        document.getElementById('position_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'positions' %}";
+        });
+
+        document.getElementById('candidate_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'candidates' %}";
+        });
+
+        document.getElementById('close_add_candidate_button').addEventListener('click', function() {
+            window.location.href = "{% url 'candidates' %}";
+        });
+
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Dropdown functionality
+            const dropdownButton = document.getElementById('userDropdown');
+            const dropdownContent = document.getElementById('userDropdownContent');
+            
+            dropdownButton.addEventListener('click', function() {
+                dropdownContent.classList.toggle('show');
+            });
+            
+            // Close the dropdown if clicked outside
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('.dropdown-button') && !event.target.matches('.icon')) {
+                    if (dropdownContent.classList.contains('show')) {
+                        dropdownContent.classList.remove('show');
+                    }
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>

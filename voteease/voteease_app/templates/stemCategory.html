@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VoteEase</title>
+    <link rel="stylesheet" href="strand_default_style.css">
+    <link rel="stylesheet" href="https://unpkg.com/ionicons@5.5.2/dist/css/ionicons.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            height: 500vh; 
+        }
+
+        .icon {
+            font-size: 2em;
+            color: #000;
+        }
+
+        .selected {
+            background-color: #4CAF50; 
+            color: white; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">VoteEase - STEM Category</h2>
+    </header>
+    
+    <div class="candidate1-popup" id="candidate1-popup">
+        <div class="candidate1-popup-content">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <h1>Chaeyoung Park</h1>
+            <p1><b>Grade Level</b>: 12</p1>
+            <p2><b>Strand</b>: STEM</p2>
+            <h2>Education:</h2>
+            <p3><li>Emilio Aguinaldo College-Cavite (2025 - Present)</li></p3>
+            <p4><li>Dasmarinas Integrated School (2019 - 2023)</li></p4>
+            <h3>Past Leadership Experience:</h3>
+            <p5><li><b>SSLG Vice President (2024-2025)</b>- Assisted in implementing student policies and organizing school events.</li></p5>
+            <p6><li><b>Class President (2023-2024)</b>- Led classroom initiatives, coordinated with teachers, and ensured student concerns were addressed.</li></p6>
+            <p7><li><b>Science Club Secretary (2022 - 2023)</b>- Managed records, prepared meeting minutes, and assisted in organizing STEM-related activities.</li></p7>
+            <h4><b>Awards and Recognitions:</b></h4>
+            <p8><li><b>Outstanding Student Leader Award (2024)</b>- Recognized for exceptional leadership in student governance.</li></p8>
+            <img src="Images/chaeyoung.jpg" alt="chaeyoung" class="candidate1-credentials-img">
+        </div>
+    </div>
+    <div class="candidate2-popup" id="candidate2-popup">
+        <div class="candidate2-popup-content">
+            <span class="close-btn2" id="closeBtn2">&times;</span>
+            <h1>Nayeon Kim</h1>
+            <p1><b>Grade Level</b>: 12</p1>
+            <p2><b>Strand</b>: ABM</p2>
+            <h2>Education:</h2>
+            <p3><li>Emilio Aguinaldo College-Cavite (2025 - Present)</li></p3>
+            <p4><li>Dasmarinas Integrated School (2019 - 2023)</li></p4>
+            <h3>Past Leadership Experience:</h3>
+            <p5><li><b>SSLG Secretary (2024 - 2025)</b>- Managed official records, assisted in policymaking, and ensured transparent communication between students and administration.</li></p5>
+            <p6><li><b>Class Vice President (2023 - 2024)</b>- Supported the class president in decision-making and led student initiatives.</li></p6>
+            <p7><li><b>Debate Club President (2022 - 2023)</b>- Organized debate competitions and trained students in argumentation and public speaking.</li></p7>
+            <h4><b>Awards and Recognitions:</b></h4>
+            <p8><li><b>Most Outstanding Student Leader (2024)</b>- Awarded for dedication and impact in student leadership.</li></p8>
+            <img src="Images/nayeon.jpg" alt="nayeon" class="candidate2-credentials-img">
+        </div>
+    </div>
+
+    <div class="votingui">
+        <div class="votingbackground">
+        <div class="scroll-progress-bar">
+        </div>
+        <div class="votingui-content">
+            <h1>Voting for Executive Positions</h1>
+            <h2>President</h2>
+            <p1>Vote for your preferred candidate for the following positions</p1>
+            <div>
+                <button class="btn-next1" id="btn-next1" disabled>Next</button> 
+            </div>
+          
+            <div class="container-candidate1"></div>
+                <img src="Images/chaeyoung.jpg" alt="chaeyoung" class="candidate1">
+                    <div>
+                        <button class="btncandidate1" id="btncandidate1">Chaeyoung</button> 
+                    </div>
+            </div>
+            <div class="container-candidate2"></div>
+                <img src="Images/nayeon.jpg" alt="nayeon" class="candidate2">
+                    <div>
+                        <button class="btncandidate2" id="btncandidate2">Nayeon</button> 
+                    </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            let voteMade = false;
+            const nextButton = document.getElementById('btn-next1');
+            const candidate1Button = document.getElementById('btncandidate1');
+            const candidate2Button = document.getElementById('btncandidate2');
+
+            candidate1Button.addEventListener('click', () => {
+                voteMade = true;
+                nextButton.disabled = false;
+                candidate1Button.classList.add('selected');
+                candidate2Button.classList.remove('selected');
+            });
+
+            candidate2Button.addEventListener('click', () => {
+                voteMade = true;
+                nextButton.disabled = false;
+                candidate2Button.classList.add('selected');
+                candidate1Button.classList.remove('selected');
+            });
+
+            
+            const candidate1Container = document.querySelector('.container-candidate1');
+            const candidate1Image = document.querySelector('.candidate1');
+            const candidate1Popup = document.querySelector('.candidate1-popup-content');
+            const closeButton1 = document.querySelector('.close-btn');
+    
+            candidate1Container.addEventListener('click', () => {
+                candidate1Popup.style.display = 'flex';
+            });
+    
+            candidate1Image.addEventListener('click', () => {
+                candidate1Popup.style.display = 'flex';
+            });
+    
+            closeButton1.addEventListener('click', () => {
+                candidate1Popup.style.display = 'none';
+            });
+    
+            
+            const candidate2Container = document.querySelector('.container-candidate2');
+            const candidate2Image = document.querySelector('.candidate2');
+            const candidate2Popup = document.querySelector('.candidate2-popup-content');
+            const closeButton2 = document.querySelector('.close-btn2');
+    
+            candidate2Container.addEventListener('click', () => {
+                candidate2Popup.style.display = 'flex';
+            });
+    
+            candidate2Image.addEventListener('click', () => {
+                candidate2Popup.style.display = 'flex';
+            });
+    
+            closeButton2.addEventListener('click', () => {
+                candidate2Popup.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

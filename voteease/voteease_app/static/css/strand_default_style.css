@@ -1,0 +1,536 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:wgth@300;400;500;600,700;800;900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+body {
+    padding-top: 20vh; 
+    overflow-x: hidden;
+}
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10vh 19vh; 
+    display: flex;
+    justify-content: space-between;
+    z-index: 99;    
+    background: #4b7574;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2.6vh 7vh;
+    display: flex;
+    justify-content: space-between;
+    z-index: 99;
+
+}
+
+.logo {
+    font-family: libre baskerville;
+    font-size: 2.3em;
+    color: #fff;
+    user-select: none;
+}
+
+.votingbackground {
+    background: #ccc;
+    width: 250vh;
+    height: 90vh;
+    max-width: 250vh;
+    max-height: 90vh;
+    min-width: 250vh;
+    min-height: 90vh;
+    margin-top: -16vh;
+}
+
+.scroll-progress-bar {
+    background: #ccc;
+    width: 50vh; 
+    height: 100vh;
+    max-width: 50vh;
+    max-height: 100vh;
+    min-width: 50vh;
+    min-height: 100vh;
+    position: absolute;
+    display: flex;
+    margin-left: 0vh;
+}
+
+.votingui-content {
+    background: #fff;
+    margin-left: 50vh;
+    width: 200vh;
+    height: 90vh;
+    max-width: 200vh;
+    max-height: 90vh;
+    min-width: 200vh;
+    min-height: 90vh;
+    display: flex;
+    position: absolute;
+    padding: 30px;
+    justify-content: center;
+}
+
+.votingui-content h1 {
+    margin-left: -25vh;
+    margin-top: 5vh;
+}
+
+.votingui-content p1 {
+    position: absolute;
+    margin-left: -25vh;
+    margin-top: 11vh;
+    font-size: 1.2em;
+}
+
+.btn-next1 {
+    background: #4b7574;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    width: 30vh;
+    height: 5vh;
+    max-width: 30vh;
+    max-height: 5vh;
+    min-width: 30vh;
+    min-height: 5vh;
+    margin-top: 75vh;
+    margin-left: 0vh;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    padding: 3px;
+}
+
+.btn-next1:hover {
+    background: #fff;
+    color: #000000;
+}
+
+.btn-next1:active {
+    background: #4b7574;
+    color: #fff;
+}
+
+.container-candidate1 {
+    background: #ccc;
+    width: 50vh;
+    height: 50vh;
+    max-width: 50vh;
+    max-height: 50vh;
+    min-width: 50vh;
+    min-height: 50vh;
+    position: absolute;
+    display: flex;
+    margin-left: -90vh;
+    margin-top: 18vh;
+    border: 2px solid black;
+    border-radius: 2.5vh;
+}
+
+.candidate1 {
+    width: 40vh;
+    height: 40vh;
+    max-width: 40vh;
+    max-height: 40vh;
+    min-width: 40vh;
+    min-height: 40vh;
+    margin-left: -90vh;
+    margin-top: 23vh;
+    display: flex;
+    position: absolute;
+    border: 2px solid black;
+    border-radius: 2.5vh;
+}
+
+.btncandidate1 {
+    background: #4b7574;
+    position: absolute;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    width: 30vh;
+    height: 5vh;
+    max-width: 30vh;
+    max-height: 5vh;
+    min-width: 30vh;
+    min-height: 5vh;
+    margin-left: -85vh;
+    margin-top: 60vh;
+}   
+
+.btncandidate1:hover {
+    background: #fff;
+    color: #000000;
+}
+
+.btncandidate1:active {
+    background: #4b7574;
+    color: #fff;
+}
+
+.container-candidate2 {
+    background: #ccc;
+    width: 50vh;
+    height: 50vh;
+    position: absolute;
+    display: flex;
+    margin-left: 140vh;
+    margin-top: 22.5vh;
+    border: 2px solid black;
+    border-radius: 2.5vh;
+}
+
+.candidate2 {
+    position: absolute;
+    display: flex;
+    width: 40vh;
+    height: 40vh;
+    max-width: 40vh;
+    max-height: 40vh;
+    min-width: 40vh;
+    min-height: 40vh;
+    margin-left: 145vh;
+    margin-top: 27.5vh;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+}
+
+.btncandidate2 {
+    position: absolute;
+    display: flex;
+    background: #4b7574;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    width: 30vh;
+    height: 5vh;
+    max-width: 30vh;
+    max-height: 5vh;
+    min-width: 30vh;
+    min-height: 5vh;
+    margin-left: 150vh;
+    margin-top: 65vh;
+    justify-content: center;
+    padding: 3px;
+}
+
+.btncandidate2:hover {
+    background: #fff;
+    color: #000000;
+}
+
+.btncandidate2:active {
+    background: #4b7574;
+    color: #fff;
+}
+
+.candidate1-popup-content {
+    background: #fff;
+    width: 135vh;
+    height: 70vh;
+    max-width: 135vh;
+    max-height: 70vh;
+    min-width: 135vh;
+    min-height: 70vh;
+    margin-top: 0vh;
+    margin-left: 45vh;
+    position: absolute;
+    display: none;
+    border: 2px solid black;
+    border-radius: 2.5vh;
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    word-wrap: normal;
+    padding: 10px;
+}
+
+.close-btn {
+    background: #4b7574;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    width: 5vh;
+    height: 5vh;
+    max-width: 5vh;
+    max-height: 5vh;
+    min-width: 5vh;
+    min-height: 5vh;
+    margin-left: 126vh;
+    margin-top: 0vh;
+    text-align: center;
+    position: absolute;
+    padding-top: 2px;
+}
+
+.candidate1-credentials-img {
+    position: absolute;
+    display: flex;
+    width: 40vh;
+    height: 40vh;
+    max-width: 40vh;
+    max-height: 40vh;
+    min-width: 40vh;
+    min-height: 40vh;
+    margin-left: 5vh;
+    margin-top: 5vh;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    z-index: 1;
+}
+
+.candidate1-popup-content h1 {
+    position: absolute;
+    display: flex;
+    margin-left: 5vh;
+    margin-top: 45vh;
+    font-size: 1.9em;
+}
+
+.candidate1-popup-content p1 {
+    position: absolute;
+    display: flex;
+    margin-left: 5vh;
+    margin-top: 55vh;
+    font-size: 1.2em;
+}
+
+.candidate1-popup-content p2 {
+    position: absolute;
+    display: flex;
+    margin-left: 5vh;
+    margin-top: 60vh;
+    font-size: 1.2em;
+}
+
+.candidate1-popup-content h2 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 3vh;
+    font-size: 1.2em;
+}
+
+.candidate1-popup-content p3 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 8vh;
+    font-size: 1em;
+}
+
+.candidate1-popup-content p4 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 13vh;
+    font-size: 1em;
+}
+
+.candidate1-popup-content h3 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 18vh;
+    font-size: 1.2em;
+}
+
+.candidate1-popup-content p5 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 23vh;
+    font-size: 1em;
+}
+
+.candidate1-popup-content p6 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 31vh;
+    font-size: 1em;
+}
+
+.candidate1-popup-content p7 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 43vh;
+    font-size: 1em;
+}
+
+.candidate1-popup-content h4 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 55vh;
+    font-size: 1.2em;
+}
+
+.candidate1-popup-content p8 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 60vh;
+    font-size: 1em;
+}
+
+
+
+.candidate2-popup-content {
+    background: #fff;
+    width: 135vh;
+    height: 70vh;
+    max-width: 135vh;
+    max-height: 70vh;
+    min-width: 135vh;
+    min-height: 70vh;
+    margin-top: 0vh;
+    margin-left: 45vh;
+    position: absolute;
+    display: none;
+    border: 2px solid black;
+    border-radius: 2.5vh;
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    word-wrap: normal;
+    padding: 10px;
+}
+
+.close-btn2 {
+    background: #4b7574;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    width: 5vh;
+    height: 5vh;
+    max-width: 5vh;
+    max-height: 5vh;
+    min-width: 5vh;
+    min-height: 5vh;
+    margin-left: 126vh;
+    margin-top: 0vh;
+    text-align: center;
+    position: absolute;
+    padding-top: 2px;
+}
+
+.candidate2-credentials-img {
+    position: absolute;
+    display: flex;
+    width: 40vh;
+    height: 40vh;
+    max-width: 40vh;
+    max-height: 40vh;
+    min-width: 40vh;
+    min-height: 40vh;
+    margin-left: 5vh;
+    margin-top: 5vh;
+    border: 2px solid black;
+    border-radius: 1.5vh;
+    z-index: 1;
+}
+
+.candidate2-popup-content h1 {
+    position: absolute;
+    display: flex;
+    margin-left: 5vh;
+    margin-top: 45vh;
+    font-size: 1.9em;
+}
+
+.candidate2-popup-content p1 {
+    position: absolute;
+    display: flex;
+    margin-left: 5vh;
+    margin-top: 55vh;
+    font-size: 1.2em;
+}
+
+.candidate2-popup-content p2 {
+    position: absolute;
+    display: flex;
+    margin-left: 5vh;
+    margin-top: 60vh;
+    font-size: 1.2em;
+}
+
+.candidate2-popup-content h2 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 3vh;
+    font-size: 1.2em;
+}
+
+.candidate2-popup-content p3 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 8vh;
+    font-size: 1em;
+}
+
+.candidate2-popup-content p4 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 13vh;
+    font-size: 1em;
+}
+
+.candidate2-popup-content h3 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 18vh;
+    font-size: 1.2em;
+}
+
+.candidate2-popup-content p5 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 23vh;
+    font-size: 1em;
+}
+
+.candidate2-popup-content p6 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 35vh;
+    font-size: 1em;
+}
+
+.candidate2-popup-content p7 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 43vh;
+    font-size: 1em;
+}
+
+.candidate2-popup-content h4 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 55vh;
+    font-size: 1.2em;
+} 
+
+.candidate2-popup-content p8 {
+    position: absolute;
+    display: flex;
+    margin-left: 50vh;
+    margin-top: 59vh;
+    font-size: 1em;
+}

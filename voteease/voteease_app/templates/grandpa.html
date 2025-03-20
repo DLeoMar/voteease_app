@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VoteEase | InnovaTech Engineers</title>
+    <link rel="stylesheet" href="{% static '/css/grandpastyle.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/ionicons@5.5.2/dist/css/ionicons.min.css">
+    <style> 
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            height: 500vh; 
+        }
+
+        .icon {
+            font-size: 2em;
+            color: #000;
+        }
+
+        .login-popup {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .login-popup-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 400px;
+        height: 380px;
+        border-radius: 10px;
+        overflow: hidden;
+        }
+
+        .close-btn {
+        border: 20vh;
+        border-radius: 1vh;
+        border-color: #000;
+        background-color: #4b7574;
+        text-align: center;
+        width: 6vh;
+        color: #fff;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+
+        .signup-popup {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .signup-popup-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 1000px;
+        height: 380px;
+        border-radius: 10px;
+        overflow: hidden;
+        }
+
+        .close-btn2 {
+        border: 20vh;
+        border-radius: 1vh;
+        border-color: #000;
+        background-color: #4b7574;
+        text-align: center;
+        width: 6vh;
+        color: #fff;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">VoteEase</h2>
+        <nav class="navigation">
+            <button class="btnLogin-popup">Login</button>
+        </nav>
+    </header>
+
+    <div class="login-popup" id="loginPopup">
+        <div class="login-popup-content">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <h2>Login</h2>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <label for="username">Username:</label>
+                <input type="text" id="loginUsername" name="username" placeholder="Enter Email" required>
+                <label for="password">Password:</label>
+                <input type="password" id="loginPassword" name="password" placeholder="Enter Password" required>
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+                <a href="forgotpassword.html">Forgot Password?</a>
+                <button type="submit">Login</button>
+                <p1>Don't have an Account? <a href="#" id="signUpLink">Sign Up</a></p1>
+            </form>
+        </div>
+    </div>
+
+    <div class="signup-popup" id="signupPopup">
+        <div class="signup-popup-content">
+            <span class="close-btn2" id="closeBtn2">&times;</span>
+            <h1>Sign Up</h1>
+            <form onsubmit="redirectToVotingSystem(event)">
+                <label for="name" class="name-label">Surname</label>
+                <label for="name2" class="name2-label">Firstname</label>
+                <label for="name3" class="name3-label">Middle Initial</label><br>
+                <input type="name" id="name" placeholder="Enter Last Name" required>
+                <input type="name2" id="name2" placeholder="Enter First Name" required>
+                <input type="name3" id="name3" placeholder="Enter Middle Initial" required><br>
+                <label for="password" class="password-label">Password</label>
+                <label for="Confirmpassword" class="Confirmpassword-label">Confirm Password</label>
+                <label for="Email" class="email-label">Email</label><br>
+                <input type="password" id="password" placeholder="Enter Password" required>
+                <input type="Confirmpassword" id="Confirmpassword" placeholder="Confirm Password" required>
+                <input type="Email" id="Email" placeholder="Enter Email" required>
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+                <button type="submit">Sign-up</button>
+                <p1>Already have an account? <a href="#" id="loginLink">Log in</a></p1>
+            </form>  
+        </div>
+    </div>
+
+    <div class="homepage-bg">
+        <img src="Images/2929 (2).jpg" alt="VoteEase" class="homepage-bg1">
+    </div>
+
+    </div>
+    <div class="content">
+        <div class="content-box">
+            <h1>Vote Smarter, Vote Faster
+             Welcome to VoteEase</h1>
+            <p1>A Fast, Secure, and Hassle-Free Way to Cast your Vote!</p1>
+        </div>
+        <div class="information-box">
+            <div class="Information-box-text">
+                <p>An online voting system for Emilio Aguinaldo College-Cavite that will be used for an efficient management of school voting events.</p>
+                <p>This new system will replace the old system of voting in EAC-Cavite and create a simple platform for a faster, mass voting with minimal errors and inefficiencies of the current method.</p>
+                <p>This eliminates manual tabulations from process, and in doing so brings accuracy and reliability to elections, saving more time and money and enabling increased participation.</p>
+            </div>
+            <img src="Images/online voting1.jpg" alt="VoteEase" class="information-box-img1">
+            <img src="Images/online voting2.jpg" alt="VoteEase" class="information-box-img2">
+
+        </div> 
+            <div class="new-section">
+                <div class="new-section-text1">      
+                    <h2>About Us</h2> 
+                    <p>VoteEase is a fast, secure, and hassle-free digital voting system designed to streamline elections and decision-making at Emilio Aguinaldo College-Cavite.</p>
+                </div>
+                    <div class="new-section-text2">
+                        <h3>Our Mission</h3>
+                        <p>To provide a fast, secure, and user-friendly digital voting system that ensures fair, accurate, and efficient elections for the Emilio Aguinaldo College-Cavite community.</p>
+                    </div>
+                    <img src="Images\innova1.png" alt="VoteEase" class="new-section-img1">
+                    <img src="Images\Tech2.png" alt="VoteEase" class="new-section-img2">
+            </div>
+        
+            <h4 class="voteease-number">VoteEase by the Number</h4>
+            <div class="new-boxshaped">
+                <div class="new-boxshaped-container1">
+                    <img src="Images/map.png" alt="VoteEase" class="new-boxshaped-container-img1">
+                    <div class="new-boxshaped-container-text1">
+                        <p2>Emilio Aguinaldo College-Cavite</p2>
+                    </div>
+                </div>
+                <div class="new-boxshaped-container2">
+                    <img src="Images/members.png" alt="VoteEase" class="new-boxshaped-container-img2">
+                    <div class="new-boxshaped-container-text2">
+                        <p2>9 Members</p2>
+                    </div>
+                </div>
+                <div class="new-boxshaped-container3">
+                    <img src="Images/students.png" alt="VoteEase" class="new-boxshaped-container-img3">
+                    <div class="new-boxshaped-container-text3">
+                        <p2>1000+ EAC Students</p2>
+                    </div>
+                </div>         
+                
+
+
+                <div class="content-box4"Voteease></div>
+                <img src="Images/two.png" alt="VoteEase" class="content-box4-img">
+                <div class="content-box4-text">
+                <h1>Get In Touch</h1>
+                <p1>Want to get in touch? We'd love to hear from you. Here's how you can reach us:</p1>
+                </div>
+                <div class="contact-box">
+                    <div class="contact-box-text">
+                        <h1>Connect with us</h1>
+                        <p1>Reach out to us on our page to connect with a team member!.</p1>
+                        <a href="https://www.facebook.com/share/1EPDTF4y6q/">Emilio Aguinaldo College-Cavite</a>
+                    </div>
+                </div>
+                <div class="contact-box2">
+                <div class="contact-box-text2">   
+                    <h2>Contact Customer Support</h2>
+                    <p2>Whether it's a friend or a VoteEase support rep, a little help can make a difference. We're here for you!</p2>
+                </div>
+                <div> 
+                    <a href="https://mail.google.com/mail/u/0/#inbox?compose=DmwnWtDrRXZsfRbFRwdwKdfCDhHrmQCZPmHFxTWmtxLbNDvhSmcqDXXkKrmdgsJjMWLmxqnVRGPb">
+                        <button class="btncontact">Contact Support</button>
+                    </a>
+                </div>
+            </div>
+            <div class="wheretofindus">
+                <div class="mapshape">
+                    <img src="Images/themap.png" alt="VoteEase" class="mapshape-img">
+                </div>
+                    
+                    <div class="address-box">
+                    <div class="address-box-text">
+                        <h1>Local Headquarter</h1>
+                        <p1>Burol Main</p1>
+                        <p2>Congressional East Ave. Dasmarinas City, Cavite</p2>
+                        <h2>Contant Info</h2>
+                        <p4>0464164341</p4>
+                        <h3>Website</h3>
+                        <a href="https://www.eac.edu.ph/">www.eac.edu.ph</a>
+                    </div>
+                 </div>
+            </div>
+             <div class="footer-box">
+                <img src="Images/innubatik.png" alt="VoteEase" class="footer-box-img">
+                <div class="footer-box-text">
+                    <h1>InovaTech Engineers</h1>
+                    <div>
+                        <a href="privacy policy.html">
+                        <button class="btnfooter">Privacy Policy</button>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="terms of service.html">
+                        <button class="btnfooter2">Terms of Service</button>
+                        </a>
+                    </div>
+                </div>
+             </div>    
+     </div> 
+<script>
+       document.addEventListener('DOMContentLoaded', (event) => {
+            const loginPopup = document.getElementById('loginPopup');
+            const btnLoginPopup = document.querySelector('.btnLogin-popup');
+            const closeBtn = document.getElementById('closeBtn');
+            const closeBtn2 = document.getElementById('closeBtn2');
+            const signUpLink = document.getElementById('signUpLink');
+            const signupPopup = document.getElementById('signupPopup');
+            const loginLink = document.getElementById('loginLink');
+                   
+            btnLoginPopup.addEventListener('click', () => {
+                loginPopup.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        
+            closeBtn.addEventListener('click', () => {
+                loginPopup.style.display = 'none';
+                signupPopup.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+
+            closeBtn2.addEventListener('click', () => {
+                signupPopup.style.display = 'none'; 
+                document.body.style.overflow = 'auto';
+            });
+        
+            window.addEventListener('click', (event) => {
+                if (event.target == loginPopup || event.target == signupPopup) {
+                    loginPopup.style.display = 'none';
+                    signupPopup.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        
+            signUpLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                loginPopup.style.display = 'none';
+                signupPopup.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        
+            loginLink.addEventListener('click', (event) => { 
+                event.preventDefault();
+                signupPopup.style.display = 'none';
+                loginPopup.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        function redirectToVotingSystem(event) {
+            event.preventDefault();
+            window.location.href = 'votingsystemUi.html';
+        }
+</script>
+</body>
+</html> 

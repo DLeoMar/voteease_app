@@ -1,0 +1,442 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VoteEase</title>
+    <link rel="stylesheet" href="{% static 'css/votingsystemUistyle2.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            height: 500vh; 
+        }
+
+        .icon {
+            font-size: 1.2em;
+            color: #fff;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .check-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 10px;
+            z-index: 10;
+        }
+        
+        .check-icon {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .view-details-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #4b7574;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 11;
+        }
+        
+        .view-details-btn:hover {
+            background: #3a5a59;
+        }
+        
+        .candidate-image-container {
+            position: relative;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 100;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+        .candidate-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup Content */
+        .candidate-popup-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .filter-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .position-filter-dropdown {
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">VoteEase</h2>
+        <button class="dropdown-button" id="home_btn" style="margin-left: auto;">Home</button>
+        {% if user.is_authenticated and user.user_type == 'student' %}
+            <nav class="navbar navbar-light bg-light">
+                <div class="dropdown">
+                    <button class="dropdown-button" id="userDropdown">
+                        <i class="fas fa-user icon" style="margin-right: 5px;"></i>{{ user.username }} <i class="fas fa-caret-down icon"></i>
+                    </button>
+                    
+                    <div class="dropdown-content" id="userDropdownContent">
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+                    </div>
+                </div>
+            </nav>
+        {% else %}
+            <button class="dropdown-button" id="candidate_btn" >Candidates</button>
+            <button class="dropdown-button" id="position_btn">Positions</button>
+            <nav class="navbar navbar-light bg-light">
+                <div class="dropdown">
+                    <button class="dropdown-button" id="userDropdown">
+                        <i class="fas fa-user icon" style="margin-right: 5px;"></i>{{ user.username }} <i class="fas fa-caret-down icon"></i>
+                    </button>
+                    
+                    <div class="dropdown-content" id="userDropdownContent">
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+                    </div>
+                </div>
+            </nav>
+        {% endif %}
+    </header>
+
+    <main class="voting-container">
+        <div class="voting-header">
+            <h1 id="headerTitle">Voting for Executive Positions</h1>
+            <p>Vote for your preferred candidate for the following positions</p>
+        </div>
+
+        <div class="filter-container">
+            <label for="positionFilter">Filter by Position: </label>
+            <select id="positionFilter" class="position-filter-dropdown">
+                <option value="all">All Positions</option>
+                {% for position in all_position %}
+                    <option value="{{ position.id }}">{{ position.position_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="candidates-container">
+            {% for candidate in all_candidates %}
+            <div class="candidate-card" id="candidate{{ candidate.id }}-card" data-position-id="{{ candidate.position.id }}">
+                <div class="candidate-image-container">
+                    <img src="{% if candidate.ps_image %}{{ candidate.ps_image.url }}{% else %}{% static 'media/nayeon.jpg' %}{% endif %}" alt="{{ candidate.first_name }}" class="candidate-image">
+                    <div class="check-overlay" id="check-overlay-{{ candidate.id }}">
+                        <i class="fas fa-check-circle check-icon"></i>
+                    </div>
+                    <button class="view-details-btn" id="view-details-{{ candidate.id }}">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
+                </div>
+                <!-- <button class="candidate-button">{{ candidate.first_name }}</button> -->
+                {% if user.is_authenticated and user.user_type == 'student' %}
+                    <form method="post" action="{% url 'cast_vote' candidate.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="candidate-button">Vote for {{ candidate.first_name }}</button>
+                    </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="candidate-popup" id="candidate1-popup">
+            <div class="candidate1-popup-content">
+                <span class="close-btn" id="closeBtn">&times;</span>
+                <img src="{% static '/media/chaeyoung.jpg' %}" alt="chaeyoung" class="candidate-credentials-img">
+                <div class="candidate-info">
+                    <h1>Chaeyoung Park</h1>
+                    <p><b>Grade Level</b>: 12</p>
+                    <p><b>Strand</b>: STEM</p>
+                </div>
+                <div class="candidate-details">
+                    <h2>Education:</h2>
+                    <ul>
+                        <li>Emilio Aguinaldo College-Cavite (2025 - Present)</li>
+                        <li>Dasmarinas Integrated School (2019 - 2023)</li>
+                    </ul>
+                    
+                    <h3>Past Leadership Experience:</h3>
+                    <ul>
+                        <li><b>SSLG Vice President (2024-2025)</b>- Assisted in implementing student policies and organizing school events.</li>
+                        <li><b>Class President (2023-2024)</b>- Led classroom initiatives, coordinated with teachers, and ensured student concerns were addressed.</li>
+                        <li><b>Science Club Secretary (2022 - 2023)</b>- Managed records, prepared meeting minutes, and assisted in organizing STEM-related activities.</li>
+                    </ul>
+                    
+                    <h4><b>Awards and Recognitions:</b></h4>
+                    <ul>
+                        <li><b>Outstanding Student Leader Award (2024)</b>- Recognized for exceptional leadership in student governance.</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Popups Section -->
+        {% for candidate in all_candidates %}
+        <div class="candidate-popup" id="candidate{{ candidate.id }}-popup">
+            <div class="candidate-popup-content">
+                <span class="close-btn" onclick="closePopup('candidate{{ candidate.id }}-popup')">&times;</span>
+                
+                <img src="{% if candidate.ps_image %}{{ candidate.ps_image.url }}{% else %}{% static 'media/nayeon.jpg' %}{% endif %}"  alt="{{ candidate.first_name }}" class="candidate-credentials-img">
+                <div class="candidate-info">
+                    <h1>{{ candidate.first_name }} {{ candidate.last_name }}</h1>
+                    <p><b>Position:</b> {{ candidate.position.position_name }}</p>
+                    <p><b>Strand:</b> {{ candidate.get_strand_display }}</p>
+                    <p><b>Sex:</b> {{ candidate.get_sex_display }}</p>
+                </div>
+                <div class="candidate-details">
+                    {% if candidate.educations.all %}
+                    <h2>Education:</h2>
+                    <ul>
+                        {% for education in candidate.educations.all %}
+                        <li>
+                            {{ education.institution_name }} 
+                            ({{ education.start_year }} - {% if education.end_year %}{{ education.end_year }}{% else %}Present{% endif %})
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if candidate.leadership_experiences.all %}
+                    <h3>Past Leadership Experience:</h3>
+                    <ul>
+                        {% for exp in candidate.leadership_experiences.all %}
+                        <li>
+                            <b>{{ exp.position }} at {{ exp.organization }}</b>
+                            ({{ exp.start_year }} - {% if exp.end_year %}{{ exp.end_year }}{% else %}Present{% endif %}) -
+                            {{ exp.description }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if candidate.awards.all %}
+                    <h4>Awards and Recognitions:</h4>
+                    <ul>
+                        {% for award in candidate.awards.all %}
+                        <li>
+                            <b>{{ award.award_name }}</b>
+                            {% if award.year %}({{ award.year }}){% endif %} - 
+                            {{ award.description }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <p class="vote-count">Votes: {{ candidate.vote_count }}</p> 
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="navigation-buttons">
+            <button class="btn-next">Next</button>
+        </div>
+    </main>
+
+    <script>
+        // Dynamic popup handling
+        document.querySelectorAll('.view-details-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const candidateId = this.id.split('-')[2];
+                document.getElementById(`candidate${candidateId}-popup`).style.display = 'flex';
+            });
+        });
+    
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+    
+        // Close popup when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('candidate-popup')) {
+                event.target.style.display = 'none';
+            }
+        });
+        // Dropdown functionality
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const dropdownButton = document.getElementById('userDropdown');
+            const dropdownContent = document.getElementById('userDropdownContent');
+            
+            dropdownButton.addEventListener('click', function() {
+                dropdownContent.classList.toggle('show');
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('.dropdown-button') && !event.target.matches('.icon')) {
+                    if (dropdownContent.classList.contains('show')) {
+                        dropdownContent.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        document.getElementById('positionFilter').addEventListener('change', function() {
+            const selectedPositionId = this.value;
+            const headerTitle = document.getElementById('headerTitle');
+            
+            // Show all candidates if "All Positions" is selected
+            if (selectedPositionId === 'all') {
+                document.querySelectorAll('.candidate-card').forEach(card => {
+                    card.style.display = 'flex';
+                });
+                headerTitle.innerHTML = 'Voting for this Candidates';
+            } else {
+                // Hide all candidates and then show the ones with the selected position
+                document.querySelectorAll('.candidate-card').forEach(card => {
+                    const candidatePositionId = card.getAttribute('data-position-id');
+                    if (candidatePositionId === selectedPositionId) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    } 
+                });
+                const selectedOption = this.querySelector(`option[value="${selectedPositionId}"]`);
+                const positionName = selectedOption ? selectedOption.textContent : '';
+
+                headerTitle.innerHTML = `Voting for ${positionName} Position`;
+            }
+            
+        });
+    
+        // Voting selection functionality
+        document.querySelectorAll('.candidate-image').forEach(image => {
+            image.addEventListener('click', function() {
+                const candidateId = this.closest('.candidate-card').id.split('-')[2];
+                const checkOverlay = document.getElementById(`check-overlay-${candidateId}`);
+                checkOverlay.style.display = checkOverlay.style.display === 'flex' ? 'none' : 'flex';
+                
+                // Unselect other candidates
+                document.querySelectorAll('.check-overlay').forEach(overlay => {
+                    if (overlay.id !== `check-overlay-${candidateId}`) {
+                        overlay.style.display = 'none';
+                    }
+                });
+            });
+        });
+    
+        // Navigation button handlers
+        document.getElementById('home_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'votingsystemUi2' %}";
+        });
+    
+        document.getElementById('position_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'positions' %}";
+        });
+    
+        document.getElementById('candidate_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'candidates' %}";
+        });
+    
+        
+    </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                <script>
+                    Swal.fire({
+                    icon: 'warning',
+                    title: 'Already Voted',
+                    text: '{{ message|escapejs|safe }}',
+                    confirmButtonText: "Ok",
+                    confirmButtonColor: '#EF3A25',
+                });
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
