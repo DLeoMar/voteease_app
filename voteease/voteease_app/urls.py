@@ -16,7 +16,7 @@ urlpatterns = [
     path('delete-position/<int:position_id>/', views.delete_position, name='delete_position'),
     path('delete-candidate/<int:candidate_id>/', views.delete_candidate, name='delete_candidate'),
     path('add_position/', views.add_position, name='add_position'),
-    path('cast-vote/<int:candidate_id>/', views.cast_vote, name='cast_vote'),
+    path('cast-vote', views.cast_vote, name='cast_vote'),
     path('filter_position', views.filter_position, name='filter_position'),
     
     # #privacy policy

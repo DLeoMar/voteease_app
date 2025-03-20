@@ -40,7 +40,7 @@ def login_registration(request):
             user = authenticate(username=user_email, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, 'You have logged in successfully!')
+                # messages.success(request, 'You have logged in successfully!')
                 return redirect('votingsystemUi2')
             else:
                 messages.error(request, 'Login Failed. Please check your credentials and try again.')
@@ -276,31 +276,67 @@ def create_candidate(request):
     })
 
 @login_required
-def cast_vote(request, candidate_id):
+def cast_vote(request):
     if request.method == 'POST':
         if not request.user.is_authenticated or request.user.user_type != 'student':
+            messages.error(request, "You must be logged in as a student to vote.")
             return redirect('login_registration')
-        
-        candidate = get_object_or_404(Candidate, id=candidate_id)
-        position = candidate.position
-        
-        if Vote.objects.filter(user=request.user, position=position).exists():
-            messages.warning(request, f"You've already voted for the position: {position.position_name}!")
-            return redirect('votingsystemUi2')
-        
-        # Create vote record
-        Vote.objects.create(
-            user=request.user,
-            candidate=candidate,
-            position=position
-        )
-        
-        # Update vote count atomically
-        Candidate.objects.filter(id=candidate_id).update(vote_count=F('vote_count') + 1)
-        candidate.refresh_from_db() 
-        
-        messages.success(request, "Vote cast successfully!")
+
+        # Get all selected candidates from the form
+        selected_candidates = []
+        for key, value in request.POST.items():
+            if key.startswith('position_'):
+                position_id = key.split('_')[1]
+                candidate_id = value
+                selected_candidates.append((position_id, candidate_id))
+
+        # Validate and process votes
+        for position_id, candidate_id in selected_candidates:
+            candidate = get_object_or_404(Candidate, id=candidate_id)
+            position = candidate.position
+
+            # Check if the user has already voted for this position
+            if Vote.objects.filter(user=request.user, position=position).exists():
+                messages.warning(request, f"You've already voted for the position: {position.position_name}!")
+                return redirect('votingsystemUi2')
+
+            # Create vote record
+            Vote.objects.create(
+                user=request.user,
+                candidate=candidate,
+                position=position
+            )
+
+            # Update vote count atomically
+            Candidate.objects.filter(id=candidate_id).update(vote_count=F('vote_count') + 1)
+            candidate.refresh_from_db()
+
+        messages.success(request, "Your votes have been cast successfully!")
         return redirect('votingsystemUi2')
+        # if not request.user.is_authenticated or request.user.user_type != 'student':
+        #     return redirect('login_registration')
+            
+        
+        # candidate = get_object_or_404(Candidate, id=candidate_id)
+        # position = candidate.position
+        
+        # if Vote.objects.filter(user=request.user, position=position).exists():
+        #     messages.warning(request, f"You've already voted for the position: {position.position_name}!")
+        #     return redirect('votingsystemUi2')
+        
+        # # Create vote record
+        # Vote.objects.create(
+        #     user=request.user,
+        #     candidate=candidate,
+        #     position=position
+        # )
+        
+        # # Update vote count atomically
+        # Candidate.objects.filter(id=candidate_id).update(vote_count=F('vote_count') + 1)
+        # candidate.refresh_from_db() 
+        
+        # messages.success(request, "Vote cast successfully!")
+        # return redirect('votingsystemUi2')
     
     return redirect('votingsystemUi2')
 

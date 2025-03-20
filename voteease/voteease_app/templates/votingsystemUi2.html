@@ -43,18 +43,16 @@
         }
         
         .view-details-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
             background: #4b7574;
             color: white;
             border: none;
             border-radius: 5px;
             padding: 5px 10px;
             cursor: pointer;
-            z-index: 11;
+            transition: background-color 0.3s ease;
+            margin-left: auto;
         }
-        
+
         .view-details-btn:hover {
             background: #3a5a59;
         }
@@ -155,6 +153,84 @@
             border-radius: 4px;
             font-size: 1rem;
         }
+        .voting-form {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Position Section */
+        .position-section {
+            margin-bottom: 30px;
+        }
+
+        .position-section h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4b7574;
+            padding-bottom: 5px;
+        }
+
+        /* Candidates List */
+        .candidates-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Candidate Item */
+        .candidate-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .candidate-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Candidate Info */
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .candidate-image {
+            width: 50px;
+            height: 50px;
+            margin-left: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        
+
+        /* Submit Button */
+        .submit-vote-btn {
+            width: 100%;
+            padding: 15px;
+            background: #4b7574;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-vote-btn:hover {
+            background: #3a5a59;
+        }
+ 
+
     </style>
 </head>
 <body>
@@ -189,159 +265,149 @@
             </nav>
         {% endif %}
     </header>
-
     <main class="voting-container">
         <div class="voting-header">
             <h1 id="headerTitle">Voting for Executive Positions</h1>
             <p>Vote for your preferred candidate for the following positions</p>
         </div>
-
-        <div class="filter-container">
-            <label for="positionFilter">Filter by Position: </label>
-            <select id="positionFilter" class="position-filter-dropdown">
-                <option value="all">All Positions</option>
-                {% for position in all_position %}
-                    <option value="{{ position.id }}">{{ position.position_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        
-        <div class="candidates-container">
-            {% for candidate in all_candidates %}
-            <div class="candidate-card" id="candidate{{ candidate.id }}-card" data-position-id="{{ candidate.position.id }}">
-                <div class="candidate-image-container">
-                    <img src="{% if candidate.ps_image %}{{ candidate.ps_image.url }}{% else %}{% static 'media/nayeon.jpg' %}{% endif %}" alt="{{ candidate.first_name }}" class="candidate-image">
-                    <div class="check-overlay" id="check-overlay-{{ candidate.id }}">
-                        <i class="fas fa-check-circle check-icon"></i>
-                    </div>
-                    <button class="view-details-btn" id="view-details-{{ candidate.id }}">
-                        <i class="fas fa-info-circle"></i> Details
-                    </button>
+    
+        <!-- Voting Form -->
+        <form method="post" action="{% url 'cast_vote' %}" class="voting-form">
+            {% csrf_token %}
+            <!-- Loop through positions -->
+            {% for position in all_position %}
+            <div class="position-section">
+                <h2>{{ position.position_name }}</h2>
+                <!-- Loop through candidates for this position -->
+                <div class="candidates-list">
+                    {% for candidate in all_candidates %}
+                        {% if candidate.position.id == position.id %}
+                        
+                        <div class="candidate-item">
+                            <input type="radio" name="position_{{ position.id }}" value="{{ candidate.id }}" required style="width: 20px; height: 20px;">
+                            <label>
+                                <div class="candidate-info">
+                                    <img src="{% if candidate.ps_image %}{{ candidate.ps_image.url }}{% else %}{% static 'media/nayeon.jpg' %}{% endif %}" alt="{{ candidate.first_name }}" class="candidate-image">
+                                    <span>{{ candidate.first_name }} {{ candidate.last_name }}</span>
+                                </div>
+                            </label>
+                            <button type="button" class="view-details-btn" onclick="openPopup('candidate{{ candidate.id }}-popup')">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                <!-- <button class="candidate-button">{{ candidate.first_name }}</button> -->
-                {% if user.is_authenticated and user.user_type == 'student' %}
-                    <form method="post" action="{% url 'cast_vote' candidate.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="candidate-button">Vote for {{ candidate.first_name }}</button>
-                    </form>
-                {% endif %}
             </div>
             {% endfor %}
-        </div>
-
-        <div class="candidate-popup" id="candidate1-popup">
-            <div class="candidate1-popup-content">
-                <span class="close-btn" id="closeBtn">&times;</span>
-                <img src="{% static '/media/chaeyoung.jpg' %}" alt="chaeyoung" class="candidate-credentials-img">
-                <div class="candidate-info">
-                    <h1>Chaeyoung Park</h1>
-                    <p><b>Grade Level</b>: 12</p>
-                    <p><b>Strand</b>: STEM</p>
-                </div>
-                <div class="candidate-details">
-                    <h2>Education:</h2>
-                    <ul>
-                        <li>Emilio Aguinaldo College-Cavite (2025 - Present)</li>
-                        <li>Dasmarinas Integrated School (2019 - 2023)</li>
-                    </ul>
-                    
-                    <h3>Past Leadership Experience:</h3>
-                    <ul>
-                        <li><b>SSLG Vice President (2024-2025)</b>- Assisted in implementing student policies and organizing school events.</li>
-                        <li><b>Class President (2023-2024)</b>- Led classroom initiatives, coordinated with teachers, and ensured student concerns were addressed.</li>
-                        <li><b>Science Club Secretary (2022 - 2023)</b>- Managed records, prepared meeting minutes, and assisted in organizing STEM-related activities.</li>
-                    </ul>
-                    
-                    <h4><b>Awards and Recognitions:</b></h4>
-                    <ul>
-                        <li><b>Outstanding Student Leader Award (2024)</b>- Recognized for exceptional leadership in student governance.</li>
-                    </ul>
-                </div>
-                
+    
+            <!-- Submit Button -->
+            <div class="submit-section">
+                <button type="submit" class="submit-vote-btn">Submit Vote</button>
             </div>
-        </div>
-        
+        </form>
+
         <!-- Popups Section -->
         {% for candidate in all_candidates %}
-        <div class="candidate-popup" id="candidate{{ candidate.id }}-popup">
-            <div class="candidate-popup-content">
-                <span class="close-btn" onclick="closePopup('candidate{{ candidate.id }}-popup')">&times;</span>
-                
-                <img src="{% if candidate.ps_image %}{{ candidate.ps_image.url }}{% else %}{% static 'media/nayeon.jpg' %}{% endif %}"  alt="{{ candidate.first_name }}" class="candidate-credentials-img">
-                <div class="candidate-info">
-                    <h1>{{ candidate.first_name }} {{ candidate.last_name }}</h1>
-                    <p><b>Position:</b> {{ candidate.position.position_name }}</p>
-                    <p><b>Strand:</b> {{ candidate.get_strand_display }}</p>
-                    <p><b>Sex:</b> {{ candidate.get_sex_display }}</p>
-                </div>
-                <div class="candidate-details">
-                    {% if candidate.educations.all %}
-                    <h2>Education:</h2>
-                    <ul>
-                        {% for education in candidate.educations.all %}
-                        <li>
-                            {{ education.institution_name }} 
-                            ({{ education.start_year }} - {% if education.end_year %}{{ education.end_year }}{% else %}Present{% endif %})
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
+            <div class="candidate-popup" id="candidate{{ candidate.id }}-popup">
+                <div class="candidate-popup-content">
+                    <span class="close-btn" onclick="closePopup('candidate{{ candidate.id }}-popup')">&times;</span>
                     
-                    {% if candidate.leadership_experiences.all %}
-                    <h3>Past Leadership Experience:</h3>
-                    <ul>
-                        {% for exp in candidate.leadership_experiences.all %}
-                        <li>
-                            <b>{{ exp.position }} at {{ exp.organization }}</b>
-                            ({{ exp.start_year }} - {% if exp.end_year %}{{ exp.end_year }}{% else %}Present{% endif %}) -
-                            {{ exp.description }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                    
-                    {% if candidate.awards.all %}
-                    <h4>Awards and Recognitions:</h4>
-                    <ul>
-                        {% for award in candidate.awards.all %}
-                        <li>
-                            <b>{{ award.award_name }}</b>
-                            {% if award.year %}({{ award.year }}){% endif %} - 
-                            {{ award.description }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
+                    <img src="{% if candidate.ps_image %}{{ candidate.ps_image.url }}{% else %}{% static 'media/nayeon.jpg' %}{% endif %}"  alt="{{ candidate.first_name }}" class="candidate-credentials-img">
+                    <div class="candidate-info1">
+                        <h1>{{ candidate.first_name }} {{ candidate.last_name }}</h1>
+                        <p><b>Position:</b> {{ candidate.position.position_name }}</p>
+                        <p><b>Strand:</b> {{ candidate.get_strand_display }}</p>
+                        <p><b>Sex:</b> {{ candidate.get_sex_display }}</p>
+                    </div>
+                    <div class="candidate-details">
+                        {% if candidate.educations.all %}
+                        <h2>Education:</h2>
+                        <ul>
+                            {% for education in candidate.educations.all %}
+                            <li>
+                                {{ education.institution_name }} 
+                                ({{ education.start_year }} - {% if education.end_year %}{{ education.end_year }}{% else %}Present{% endif %})
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
+                        {% if candidate.leadership_experiences.all %}
+                        <h3>Past Leadership Experience:</h3>
+                        <ul>
+                            {% for exp in candidate.leadership_experiences.all %}
+                            <li>
+                                <b>{{ exp.position }} at {{ exp.organization }}</b>
+                                ({{ exp.start_year }} - {% if exp.end_year %}{{ exp.end_year }}{% else %}Present{% endif %}) -
+                                {{ exp.description }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
+                        {% if candidate.awards.all %}
+                        <h4>Awards and Recognitions:</h4>
+                        <ul>
+                            {% for award in candidate.awards.all %}
+                            <li>
+                                <b>{{ award.award_name }}</b>
+                                {% if award.year %}({{ award.year }}){% endif %} - 
+                                {{ award.description }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
                 </div>
-                <p class="vote-count">Votes: {{ candidate.vote_count }}</p> 
             </div>
-        </div>
         {% endfor %}
-        
-        <div class="navigation-buttons">
-            <button class="btn-next">Next</button>
-        </div>
     </main>
 
+    
+    
     <script>
-        // Dynamic popup handling
-        document.querySelectorAll('.view-details-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const candidateId = this.id.split('-')[2];
-                document.getElementById(`candidate${candidateId}-popup`).style.display = 'flex';
-            });
+        document.getElementById('home_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'votingsystemUi2' %}";
         });
     
+        document.getElementById('position_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'positions' %}";
+        });
+    
+        document.getElementById('candidate_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'candidates' %}";
+        });
+    </script>
+
+    <script>
+        // Open candidate details popup
+        function openPopup(popupId) {
+            document.getElementById(popupId).style.display = 'flex';
+        }
+
+        // Close candidate details popup
         function closePopup(popupId) {
             document.getElementById(popupId).style.display = 'none';
         }
-    
+
         // Close popup when clicking outside
         window.addEventListener('click', function(event) {
             if (event.target.classList.contains('candidate-popup')) {
                 event.target.style.display = 'none';
             }
         });
+
+        // Navigation button handlers
+        document.getElementById('home_btn').addEventListener('click', function() {
+            window.location.href = "{% url 'votingsystemUi2' %}";
+        });
+    </script>
+
+
+
+    <script>
+        
         // Dropdown functionality
         document.addEventListener('DOMContentLoaded', (event) => {
             const dropdownButton = document.getElementById('userDropdown');
@@ -359,66 +425,8 @@
                 }
             });
         });
-
-        document.getElementById('positionFilter').addEventListener('change', function() {
-            const selectedPositionId = this.value;
-            const headerTitle = document.getElementById('headerTitle');
-            
-            // Show all candidates if "All Positions" is selected
-            if (selectedPositionId === 'all') {
-                document.querySelectorAll('.candidate-card').forEach(card => {
-                    card.style.display = 'flex';
-                });
-                headerTitle.innerHTML = 'Voting for this Candidates';
-            } else {
-                // Hide all candidates and then show the ones with the selected position
-                document.querySelectorAll('.candidate-card').forEach(card => {
-                    const candidatePositionId = card.getAttribute('data-position-id');
-                    if (candidatePositionId === selectedPositionId) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    } 
-                });
-                const selectedOption = this.querySelector(`option[value="${selectedPositionId}"]`);
-                const positionName = selectedOption ? selectedOption.textContent : '';
-
-                headerTitle.innerHTML = `Voting for ${positionName} Position`;
-            }
-            
-        });
-    
-        // Voting selection functionality
-        document.querySelectorAll('.candidate-image').forEach(image => {
-            image.addEventListener('click', function() {
-                const candidateId = this.closest('.candidate-card').id.split('-')[2];
-                const checkOverlay = document.getElementById(`check-overlay-${candidateId}`);
-                checkOverlay.style.display = checkOverlay.style.display === 'flex' ? 'none' : 'flex';
-                
-                // Unselect other candidates
-                document.querySelectorAll('.check-overlay').forEach(overlay => {
-                    if (overlay.id !== `check-overlay-${candidateId}`) {
-                        overlay.style.display = 'none';
-                    }
-                });
-            });
-        });
-    
-        // Navigation button handlers
-        document.getElementById('home_btn').addEventListener('click', function() {
-            window.location.href = "{% url 'votingsystemUi2' %}";
-        });
-    
-        document.getElementById('position_btn').addEventListener('click', function() {
-            window.location.href = "{% url 'positions' %}";
-        });
-    
-        document.getElementById('candidate_btn').addEventListener('click', function() {
-            window.location.href = "{% url 'candidates' %}";
-        });
-    
-        
     </script>
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -434,6 +442,16 @@
                     confirmButtonText: "Ok",
                     confirmButtonColor: '#EF3A25',
                 });
+                </script>
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS%}
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Vote Submitted',
+                        text: '{{ message|escapejs|safe }}',
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: '#F5A623',
+                    });
                 </script>
             {% endif %}
         {% endfor %}

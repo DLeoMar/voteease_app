@@ -559,6 +559,17 @@
                     confirmButtonColor: '#EF3A25',
                 });
                 </script>
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS%}
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registration Successfully',
+                        text: '{{ message|escapejs|safe }}',
+                        confirmButtonText: "Ok",
+                        confirmButtonColor: '#F5A623',
+                    });
+                </script>
+
             {% else %}
                 <script>
                     Swal.fire({
