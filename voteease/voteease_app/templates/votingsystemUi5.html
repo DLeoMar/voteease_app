@@ -97,6 +97,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-left: auto;
             transition: background 0.3s ease;
         }
 
@@ -111,7 +112,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 1rem;
+            /* margin-left: auto; */
         }
 
         /* Responsive Design */
@@ -383,7 +384,7 @@
 <body>
     <header>
         <h2 class="logo">VoteEase</h2>
-        <button class="dropdown-button" id="home_btn" style="margin-left: auto;">Home</button>
+        <button class="dropdown-button" id="home_btn" style="margin-left: auto;">Cast Vote</button>
         <button class="dropdown-button" id="candidate_btn" >Candidates</button>
         <button class="dropdown-button" id="position_btn">Positions</button>
         <nav class="navbar navbar-light bg-light">
@@ -509,6 +510,8 @@
                             <label for="leadership_description_1">Description</label>
                             <textarea id="leadership_description_1" name="leadership[0][description]" required></textarea>
                         </div>
+                        <div class="form-group">
+                        </div>
                     <button type="button" class="remove-btn" onclick="removeLeadershipGroup('1')">Remove</button>
                     </div>
                 </div>
@@ -533,6 +536,8 @@
                             <label for="award_description_1">Start Year</label>
                             <input type="text" id="award_description_1" name="award[0][description]" required>
                         </div>
+                        <div class="form-group">
+                        </div>
                         <button type="button" class="remove-btn" onclick="removeAwardGroup('1')">Remove</button>
                     </div>
                 </div>
@@ -545,6 +550,7 @@
             </div>
         </form>
     </div>
+    
 
     <script>
         let educationCount = 1;

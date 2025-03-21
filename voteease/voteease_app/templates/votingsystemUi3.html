@@ -332,7 +332,7 @@
 <body>
     <header>
         <h2 class="logo">VoteEase</h2>
-        <button class="dropdown-button" id="home_btn" style="margin-left: auto;">Home</button>
+        <button class="dropdown-button" id="home_btn" style="margin-left: auto;">Cast Vote</button>
         <button class="dropdown-button" id="candidate_btn" >Candidates</button>
         <button class="dropdown-button" id="position_btn">Positions</button>
         <nav class="navbar navbar-light bg-light">
@@ -358,14 +358,12 @@
         <table class="table">
             <div class="table-header">
                 <div class="header__item"><a id="position_name" class="filter__link" href="#">Position Name</a></div>
-                <div class="header__item"><a id="vote_count" class="filter__link filter__link--number" href="#">Vote Count</a></div>
-                <div class="header__item"></div>
+                <div class="header__item">Action</div>
             </div>
             <div class="table-content">
                 {% for position in all_position %}
                     <div class="table-row">
                         <div class="table-data">{{ position.position_name }}</div>
-                        <!-- <div class="table-data">{{ position.vote_count }}</div> -->
                         <div class="table-data">
                             <form method="POST" action="{% url 'delete_position' position.id %}" class="delete-form">
                                 {% csrf_token %}
@@ -378,8 +376,7 @@
                 {% endfor %}
             </div>  
         </table>
-        
-        
+
     </main>
 
 
@@ -388,11 +385,7 @@
             <form id="dataForm" method="POST" action="{% url 'add_position' %}">
                 {% csrf_token %}
                 <label for="position_name">Position Name</label>
-                <input type="text" id="position_name" name="position_name" required><br>
-
-                <!-- <label for="vote_count">Vote Count:</label>
-                <input type="text" id="vote_count" name="vote_count" required><br> -->
-        
+                <input type="text" id="position_name" name="position_name" required><br>       
                 <button type="submit" class="btn btn-success">Submit</button>
                 <button type="button" id="close_add_position_button" class="btn btn-secondary">Cancel</button>
             </form>
